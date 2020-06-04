@@ -1,6 +1,5 @@
 import * as Konva from "konva";
 const gifler = require("./gifler");
-console.log(gifler);
 
 const width = window.innerWidth;
 const height = window.innerHeight;

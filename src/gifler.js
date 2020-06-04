@@ -21,7 +21,7 @@ text :
   - This is the main entrypoint to the library.
   - Prepares and sends an XHR request to load the GIF file.
   - Returns a <b>Gif</b> instance for interacting with the library.
-args : 
+args :
   url : 'URL to .gif file'
 return : 'a Gif instance object'
  */
@@ -29,9 +29,9 @@ return : 'a Gif instance object'
 gifler = function(url) {
   var aync, promise, xhr;
   xhr = new XMLHttpRequest();
-  xhr.open("GET", url, (aync = true));
+  xhr.open("GET", url, aync = true);
   xhr.responseType = "arraybuffer";
-  promise = new Promise(function(resolve, reject) {
+  promise = new Promise(function(resolve) {
     return (xhr.onload = function(e) {
       return resolve(this.response);
     });
@@ -76,7 +76,7 @@ Gif = (function() {
     - >
       Animates the loaded GIF, drawing each frame into the canvas.
       This matches the look of an &lt;img&gt; tag.
-  args : 
+  args :
     selector : 'A <canvas> element or query selector for a <canvas> element.'
    */
 
@@ -98,7 +98,7 @@ Gif = (function() {
     - >
       This gives you complete control of how the frame is drawn
       into the canvas context.
-  args : 
+  args :
     selector     : 'A <canvas> element or query selector for a <canvas> element.'
     onDrawFrame  : 'A callback that will be invoked when each frame should be drawn into the canvas. see Animator.onDrawFrame.'
     setDimesions : 'OPTIONAL. If true, the canvas''s width/height will be set to the dimension of the loaded GIF. default: false.'
@@ -177,7 +177,7 @@ Decoder = (function() {
       function(i) {
         return Decoder.decodeFrame(reader, i);
       },
-      concurrency = 1)
+      { concurrency:  1}
     );
   };
 
