@@ -13,6 +13,9 @@ var Animator,
 
 GifReader = require("omggif").GifReader;
 
+// const omggif = require('./omggif');
+// GifReader = omggif.GifReader;
+
 Promise = require("bluebird");
 
 /*---
@@ -63,7 +66,6 @@ Gif = (function() {
     this._animatorPromise = dataPromise.then(function(data) {
       var reader;
       reader = new GifReader(new Uint8Array(data));
-      console.log(reader);
       return Decoder.decodeFramesAsync(reader).then(function(frames) {
         return new Animator(reader, frames);
       });
@@ -142,7 +144,7 @@ Decoder = (function() {
   function Decoder() {}
 
   Decoder.decodeFramesSync = function(reader) {
-    var j, ref, results;
+    var results;
     return function() {
       results = [];
       for (
@@ -177,7 +179,7 @@ Decoder = (function() {
       function(i) {
         return Decoder.decodeFrame(reader, i);
       },
-      { concurrency:  1}
+      { concurrency:  1 }
     );
   };
 
@@ -414,10 +416,14 @@ gifler.Decoder = Decoder;
 
 gifler.Animator = Animator;
 
-if (typeof window !== "undefined" && window !== null) {
-  window.gifler = gifler;
-}
-
-if (typeof module !== "undefined" && module !== null) {
-  module.exports = gifler;
-}
+(function(root, factory) {
+  if (typeof module !== "undefined" && module !== null) {
+    module.exports = gifler;
+  } else if (typeof exports === "object") {
+    exports["gifler"] = gifler;
+  } else if (typeof define === "object" && define.amd) {
+    define([], factory);
+  } else {
+    root["gifler"] = gifler;
+  }
+})(this, gifler);
