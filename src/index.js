@@ -13,10 +13,16 @@ const stage = new Konva.Stage({
 const layer = new Konva.Layer();
 stage.add(layer);
 
-const canvas1 = document.createElement('canvas');
-const canvas2 = document.createElement('canvas');
+function getRandomPoint() {
+  return {
+    x: Math.random() * width,
+    y: Math.random() * height,
+  }
+}
 
-function gifToCanvas(path, canvas, layer) {
+function gifToCanvas(path, layer) {
+  const canvas = document.createElement('canvas');
+
   // use external library to parse and draw gif animation
   function onDrawFrame(ctx, frame) {
     // update canvas size
@@ -29,13 +35,16 @@ function gifToCanvas(path, canvas, layer) {
   }
 
   gifler(path).frames(canvas, onDrawFrame);
+
+  return canvas;
 }
 
-gifToCanvas('https://media1.tenor.com/images/d377e76efd51b36e1461003ce4f2913e/tenor.gif?itemid=10480536', canvas1, layer);
-gifToCanvas('http://img.rynxiao.cn/test/flutter.gif', canvas2, layer);
+const canvas1 = gifToCanvas('https://media1.tenor.com/images/d377e76efd51b36e1461003ce4f2913e/tenor.gif?itemid=10480536', layer);
+const canvas2 = gifToCanvas('http://img.rynxiao.cn/test/flutter.gif', layer);
 
-// draw resulted canvas into the stage as Konva.Image
-var image1 = new Konva.Image({ image: canvas1 });
-var image2 = new Konva.Image({ image: canvas2 });
-layer.add(image2);
-layer.add(image1);
+const canvasList = Array(80).fill(canvas1);
+canvasList.push(canvas2);
+canvasList.forEach(canvas => {
+  const image = new Konva.Image({ image: canvas, ...getRandomPoint() });
+  layer.add(image);
+});
